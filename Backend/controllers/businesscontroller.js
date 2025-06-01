@@ -20,3 +20,18 @@ exports.getBusiness = async (req, res) => {
     res.status(500).json({ message: 'Failed to retrieve business', error: err.message });
   }
 };
+const validateEIN = require('../utils/validateEIN');
+
+exports.registerBusiness = async (req, res) => {
+  try {
+    const { ein } = req.body;
+
+    if (!validateEIN(ein)) {
+      return res.status(400).json({ message: 'Invalid EIN format. Expected format: 12-3456789' });
+    }
+
+    // continue with business creation...
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+};
