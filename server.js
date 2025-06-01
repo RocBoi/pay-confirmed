@@ -24,3 +24,4 @@ app.use('/api', routes);
 
 // Export app for index.js
 module.exports = app;
+require('dotenv').config();
