@@ -1,53 +1,45 @@
-const Payroll = require('../models/Payroll');
-const Business = require('../models/Business');
-// Later: add PDF generator lib here for paystub
+const payrollService = require('../services/payrollService');
+const PDFDocument = require('pdfkit');
 
 exports.issuePayroll = async (req, res) => {
   try {
-    const {
-      employeeName,
-      payPeriod,
-      grossPay,
-      netPay,
-      taxes,
-      businessId
-    } = req.body;
-
-    const business = await Business.findById(businessId);
-    if (!business) return res.status(404).json({ message: 'Business not found.' });
-
-    const payroll = await Payroll.create({
-      employeeName,
-      payPeriod,
-      grossPay,
-      netPay,
-      taxes,
-      businessId
-    });
-
-    res.status(201).json({ message: 'Payroll issued.', payroll });
+    const payroll = await payrollService.createPayroll(req.body);
+    res.status(201).json(payroll);
   } catch (err) {
-    res.status(500).json({ message: 'Server error issuing payroll.', error: err.message });
+    res.status(500).json({ message: 'Payroll issuance failed', error: err.message });
   }
 };
 
 exports.getPayrolls = async (req, res) => {
   try {
-    const payrolls = await Payroll.find({ businessId: req.params.businessId });
-    res.status(200).json(payrolls);
+    const payrolls = await payrollService.getPayrollsByBusiness(req.params.businessId);
+    res.json(payrolls);
   } catch (err) {
-    res.status(500).json({ message: 'Server error fetching payrolls.', error: err.message });
+    res.status(500).json({ message: 'Failed to fetch payrolls', error: err.message });
   }
 };
 
 exports.downloadPaystub = async (req, res) => {
   try {
-    const payroll = await Payroll.findById(req.params.id).populate('businessId');
-    if (!payroll) return res.status(404).json({ message: 'Paystub not found.' });
+    const payroll = await payrollService.getPayrollById(req.params.id);
+    if (!payroll) {
+      return res.status(404).json({ message: 'Payroll record not found' });
+    }
 
-    // TODO: Generate and send PDF here using `pdfkit` or `puppeteer`
-    res.status(200).json({ message: 'Paystub download placeholder.', payroll });
+    const doc = new PDFDocument();
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename=paystub-${payroll._id}.pdf`);
+    doc.pipe(res);
+
+    doc.fontSize(20).text('Pay Confirmed - Paystub', { align: 'center' });
+    doc.moveDown();
+    doc.fontSize(14).text(`Employee: ${payroll.employeeName}`);
+    doc.text(`Pay Period: ${payroll.payPeriod}`);
+    doc.text(`Gross Pay: $${payroll.grossPay.toFixed(2)}`);
+    doc.text(`Taxes: $${payroll.taxes.toFixed(2)}`);
+    doc.text(`Net Pay: $${payroll.netPay.toFixed(2)}`);
+    doc.end();
   } catch (err) {
-    res.status(500).json({ message: 'Error downloading paystub.', error: err.message });
+    res.status(500).json({ message: 'Failed to download paystub', error: err.message });
   }
 };
