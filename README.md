@@ -1,30 +1,35 @@
-# Pay Confirmed 🧾💼
+# 🧾 Pay Confirmed
 
-**Pay Confirmed** is a modern, secure, all-in-one **payroll processing and paystub generation app** designed for U.S.-based companies. Built with compliance, speed, and scalability in mind — Pay Confirmed enables businesses to issue payroll, download paystubs, and manage tax documentation seamlessly.
+**Pay Confirmed** is a secure, full-stack SaaS payroll application that empowers verified businesses to manage employee payroll, generate downloadable pay stubs, and issue payments with full compliance. Built with Node.js, MongoDB, JWT authentication, and a Vite + React frontend, this solution is designed to rival and outperform existing payroll systems.
 
 ---
 
 ## 🚀 Features
 
-- ✅ Secure business onboarding (EIN, Fed/State Tax ID, Control Number, Business Bank Account required)
-- 📥 Generate, view, and download paystubs (PDF)
-- 💸 Issue payroll directly from linked business bank accounts
-- 📂 Store tax-compliant payroll records (federal & state)
-- 📊 Admin dashboard for payroll analytics & compliance status
-- 🔐 End-to-end encrypted transactions
-- 🧾 Support for 1099 and W2 classification
+- 🔐 Business Account Verification (EIN, Tax IDs, Bank Control)
+- 🧾 Digital & Printable Paystub Generator
+- 💼 Payroll Management Dashboard
+- 📥 Secure Download & PDF Export
+- 📊 Payroll Reporting & History
+- ✅ JWT-Based Login & Authorization
+- 🌐 RESTful API Backend (Express.js)
+- ⚡ Vite-Powered Frontend (React.js + TailwindCSS)
+- 🔒 Token-based Route Protection
+- 📱 Responsive UI
 
 ---
 
-## 🏗️ Project Structure
+## 🛠️ Tech Stack
 
-```bash
-pay-confirmed/
-├── backend/         # API, database, auth
-├── frontend/        # Web app interface (React)
-├── mobile-app/      # Mobile app (Flutter/React Native)
-├── docs/            # Developer and API documentation
-├── .github/         # GitHub Actions, CI/CD workflows
-├── .env.example     # Environment variable template
-├── LICENSE
-└── README.md
+| Layer        | Technology                |
+|--------------|---------------------------|
+| Frontend     | React, Vite, Tailwind CSS |
+| Backend      | Node.js, Express.js       |
+| Auth         | JWT                       |
+| Database     | MongoDB, Mongoose         |
+| PDF Support  | pdfkit or jsPDF (TBD)     |
+| Deployment   | GitHub + Cloud/VPS        |
+
+---
+
+## 📂 Project Structure
