@@ -40,3 +40,7 @@ exports.login = async (req, res) => {
     res.status(500).json({ message: 'Login failed', error: err.message });
   }
 };
+const log = require('../utils/logger');
+
+log('Payroll issued for John Doe', 'info');
+log('Invalid EIN provided', 'warn');
