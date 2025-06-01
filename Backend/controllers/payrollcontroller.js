@@ -43,3 +43,28 @@ exports.downloadPaystub = async (req, res) => {
     res.status(500).json({ message: 'Failed to download paystub', error: err.message });
   }
 };
+const formatCurrency = require('../utils/formatCurrency');
+const generatePaystubPDF = require('../utils/generatePaystubPDF');
+const path = require('path');
+
+exports.issuePayroll = async (req, res) => {
+  try {
+    const { employeeName, payPeriod, grossPay, taxes, netPay } = req.body;
+
+    // Save to DB...
+
+    const outputPath = path.join(__dirname, `../generated/paystub_${employeeName.replace(/\s+/g, '_')}.pdf`);
+    generatePaystubPDF(req.body, outputPath);
+
+    res.status(201).json({
+      message: 'Payroll issued',
+      employeeName,
+      grossPay: formatCurrency(grossPay),
+      taxes: formatCurrency(taxes),
+      netPay: formatCurrency(netPay),
+      paystubPath: outputPath
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Error issuing payroll' });
+  }
+};
