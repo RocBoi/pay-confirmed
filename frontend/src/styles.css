@@ -1,0 +1,18 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f0f2f5;
+  color: #1f2937;
+}
+
+.custom-btn {
+  background: linear-gradient(to right, #4f46e5, #3b82f6);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+.custom-btn:hover {
+  background: linear-gradient(to right, #3730a3, #2563eb);
+}
