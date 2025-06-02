@@ -1,26 +1,41 @@
-const generatePaystubPDF = require('../../utils/generatePaystubPDF');
+// tests/generatePayStubPDF.test.js
 const fs = require('fs');
+const path = require('path');
+const { generatePayStubPDF } = require('../utils/generatePayStubPDF');
 
-describe('generatePaystubPDF Utility', () => {
-  const payroll = {
-    employeeName: 'Test User',
+describe('generatePayStubPDF utility', () => {
+  const samplePayData = {
+    employeeName: 'Marquez Ross',
     payPeriod: 'May 2025',
-    grossPay: 3000,
-    taxes: 600,
-    netPay: 2400,
+    grossPay: 5000,
+    federalTax: 500,
+    stateTax: 250,
+    netPay: 4250,
+    companyName: 'Pay Confirmed LLC',
+    payDate: '2025-05-31'
   };
 
-  const path = './test-paystub.pdf';
-
-  afterAll(() => {
-    if (fs.existsSync(path)) fs.unlinkSync(path);
+  it('should generate a valid PDF buffer', async () => {
+    const pdfBuffer = await generatePayStubPDF(samplePayData);
+    
+    expect(pdfBuffer).toBeInstanceOf(Buffer);
+    expect(pdfBuffer.length).toBeGreaterThan(0);
   });
 
-  test('generates a PDF file', (done) => {
-    generatePaystubPDF(payroll, path);
-    setTimeout(() => {
-      expect(fs.existsSync(path)).toBe(true);
-      done();
-    }, 500); // wait for file stream to finish
+  it('should write PDF to disk (test file)', async () => {
+    const outputPath = path.join(__dirname, 'test-paystub.pdf');
+    const pdfBuffer = await generatePayStubPDF(samplePayData);
+    
+    fs.writeFileSync(outputPath, pdfBuffer);
+    
+    const exists = fs.existsSync(outputPath);
+    expect(exists).toBe(true);
+
+    // Optional cleanup
+    fs.unlinkSync(outputPath);
+  });
+
+  it('throws error on invalid input', async () => {
+    await expect(generatePayStubPDF(null)).rejects.toThrow();
   });
 });
