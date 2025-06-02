@@ -11,3 +11,4 @@ exports.getPayrollsByBusiness = async (businessId) => {
 exports.getPayrollById = async (id) => {
   return await Payroll.findById(id).populate('businessId');
 };
+const db = require('./db');
