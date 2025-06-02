@@ -1,37 +1,47 @@
-const businessService = require('../services/businessService');
+const businessServices = require('../services/businessServices');
 
-exports.registerBusiness = async (req, res) => {
+async function createCompany(req, res) {
   try {
-    const business = await businessService.createBusiness(req.body);
-    res.status(201).json(business);
+    const company = await businessServices.createCompany(req.body);
+    res.status(201).json(company);
   } catch (err) {
-    res.status(500).json({ message: 'Business registration failed', error: err.message });
+    res.status(400).json({ error: err.message });
   }
-};
+}
 
-exports.getBusiness = async (req, res) => {
+async function addEmployee(req, res) {
   try {
-    const business = await businessService.findBusinessById(req.params.id);
-    if (!business) {
-      return res.status(404).json({ message: 'Business not found' });
-    }
-    res.json(business);
+    const { companyId } = req.params;
+    const employee = await businessServices.addEmployee(companyId, req.body);
+    res.status(201).json(employee);
   } catch (err) {
-    res.status(500).json({ message: 'Failed to retrieve business', error: err.message });
+    res.status(400).json({ error: err.message });
   }
-};
-const validateEIN = require('../utils/validateEIN');
+}
 
-exports.registerBusiness = async (req, res) => {
+async function issuePayroll(req, res) {
   try {
-    const { ein } = req.body;
-
-    if (!validateEIN(ein)) {
-      return res.status(400).json({ message: 'Invalid EIN format. Expected format: 12-3456789' });
-    }
-
-    // continue with business creation...
-  } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    const { companyId } = req.params;
+    const payroll = await businessServices.issuePayroll(companyId, req.body);
+    res.status(201).json(payroll);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
   }
+}
+
+async function getPaystubs(req, res) {
+  try {
+    const { employeeId } = req.params;
+    const paystubs = await businessServices.getPaystubs(employeeId);
+    res.status(200).json(paystubs);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+}
+
+module.exports = {
+  createCompany,
+  addEmployee,
+  issuePayroll,
+  getPaystubs,
 };
