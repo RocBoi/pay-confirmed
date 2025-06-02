@@ -11,3 +11,4 @@ exports.findBusinessById = async (id) => {
 exports.createBusiness = async (data) => {
   return await Business.create(data);
 };
+const db = require('./db');
