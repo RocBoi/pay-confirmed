@@ -1,17 +1,10 @@
-import React from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import Login from './pages/Login'
-import Dashboard from './pages/Dashboard'
+import React from 'react';
+import Login from './components/Login'; // or Dashboard if logged in
+import './index.css';
+import './styles.css';
 
-function App() {
-  return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-      </Routes>
-    </Router>
-  )
-}
+const App = () => {
+  return <Login />; // Replace with <Dashboard /> after login
+};
 
-export default App
+export default App;
