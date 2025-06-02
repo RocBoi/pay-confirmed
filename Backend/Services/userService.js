@@ -13,3 +13,4 @@ exports.createUser = async ({ name, email, password }) => {
 exports.comparePassword = async (plainText, hashed) => {
   return await bcrypt.compare(plainText, hashed);
 };
+const db = require('./db');
