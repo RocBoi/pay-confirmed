@@ -1,27 +1,39 @@
-const request = require('supertest');
-const app = require('../app');
-const mongoose = require('mongoose');
+// tests/payroll.test.js
+const { calculatePayroll } = require('../services/payrollService');
 
-describe('Payroll Routes', () => {
-  beforeAll(async () => {
-    await mongoose.connect(process.env.MONGO_URI);
+describe('Payroll Service - calculatePayroll()', () => {
+  it('should calculate net pay correctly', () => {
+    const input = {
+      grossPay: 6000,
+      deductions: {
+        federal: 900,
+        state: 300,
+        insurance: 100
+      }
+    };
+
+    const result = calculatePayroll(input);
+    
+    expect(result).toHaveProperty('netPay');
+    expect(result.netPay).toBe(6000 - (900 + 300 + 100));
   });
 
-  afterAll(async () => {
-    await mongoose.connection.close();
+  it('should handle zero deductions', () => {
+    const input = {
+      grossPay: 4000,
+      deductions: {
+        federal: 0,
+        state: 0,
+        insurance: 0
+      }
+    };
+
+    const result = calculatePayroll(input);
+
+    expect(result.netPay).toBe(4000);
   });
 
-  test('Issue a payroll', async () => {
-    const res = await request(app).post('/api/payroll/issue').send({
-      employeeName: 'Test Employee',
-      businessId: '60c72b2f9f1b2c001c8d2b13',
-      payPeriod: 'June 2025',
-      grossPay: 3000,
-      taxes: 600,
-      netPay: 2400,
-    });
-
-    expect(res.statusCode).toBe(201);
-    expect(res.body.employeeName).toBe('Test Employee');
+  it('throws error if input is missing', () => {
+    expect(() => calculatePayroll(null)).toThrow();
   });
 });
