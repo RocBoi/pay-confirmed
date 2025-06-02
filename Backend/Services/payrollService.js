@@ -1,14 +1,8 @@
-const Payroll = require('../models/Payroll');
+// services/payrollService.js
+function calculatePayroll({ grossPay, deductions }) {
+  if (!grossPay || !deductions) throw new Error('Invalid payroll input');
+  const totalDeductions = Object.values(deductions).reduce((a, b) => a + b, 0);
+  return { netPay: grossPay - totalDeductions };
+}
 
-exports.createPayroll = async (data) => {
-  return await Payroll.create(data);
-};
-
-exports.getPayrollsByBusiness = async (businessId) => {
-  return await Payroll.find({ businessId });
-};
-
-exports.getPayrollById = async (id) => {
-  return await Payroll.findById(id).populate('businessId');
-};
-const db = require('./db');
+module.exports = { calculatePayroll };
