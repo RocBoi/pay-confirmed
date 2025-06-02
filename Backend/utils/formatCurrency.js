@@ -1,5 +1,11 @@
-const formatCurrency = (amount) => {
-  return `$${Number(amount).toFixed(2)}`;
-};
+// utils/currency.js
 
-module.exports = formatCurrency;
+function formatCurrency(amount, currency = 'USD', locale = 'en-US') {
+  return new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency,
+    minimumFractionDigits: 2,
+  }).format(amount);
+}
+
+module.exports = { formatCurrency };
